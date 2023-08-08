@@ -12,12 +12,21 @@ const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
+
 loadMoreBtn.classList.add('is-hidden');
 
 let page = 1;
 let query = '';
-let simpleLightBox;
+// let simpleLightBox;
 const perPage = 40;
+
+function simple() {
+    const simpleLightBox = new SimpleLightbox('.gallery a');
+
+    return simpleLightBox
+}
+
+const lightBox = simple(); 
 
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onLoadMoreBtn);
@@ -41,7 +50,7 @@ function onSearch(event) {
             Notiflix.Notify.failure(`Sorry, there are no images matching your search query. Please try again.`);
         }else {
             renderGallery(data.hits);
-            simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+            lightBox.refresh();
             Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
             console.log(data.totalHits);
 
@@ -60,13 +69,13 @@ function onSearch(event) {
 
 function onLoadMoreBtn() {
     page += 1;
-    simpleLightBox.destroy();
+    // simpleLightBox.destroy();
     console.log(page);
 
     fetchImages(query, page, perPage)
     .then (({data}) => {
-        renderGallery(data.hits);
-        simpleLightBox = new SimpleLightbox('.galllery a').refresh();
+        renderGallery(data.hits)
+        lightBox.refresh();
 
         const totalPages = Math.ceil(data.totalHits / perPage);
         console.log(totalPages);
